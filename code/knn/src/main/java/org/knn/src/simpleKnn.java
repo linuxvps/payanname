@@ -1,4 +1,4 @@
-package org.knn.knn.src;
+package org.knn.src;
 
 import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;
@@ -8,7 +8,7 @@ import weka.core.Instances;
 
 import java.util.ArrayList;
 
-public class ATMOptimization {
+public class simpleKnn {
     public static void main(String[] args) throws Exception {
         // تعریف ویژگی‌ها (Attributes)
         ArrayList<Attribute> attributes = new ArrayList<>();

@@ -1,4 +1,4 @@
-package org.knn.knn;
+package org.knn;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
