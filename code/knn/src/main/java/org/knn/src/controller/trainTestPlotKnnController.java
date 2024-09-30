@@ -118,4 +118,10 @@ public class trainTestPlotKnnController {
         return new PredictionAndPlotResponse(predictions, base64Image);
     }
 
+
+    @GetMapping("hi")
+    public String sayhi() {
+        return "hi";
+    }
+
 }
