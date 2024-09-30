@@ -1,12 +1,15 @@
 package org.knn.src.controller;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +35,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class trainTestPlotKnnController {
 
-
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/predictions")
-    public PredictionAndPlotResponse getPredictions() throws Exception {
+    public ResponseEntity<byte[]> getPredictions() throws Exception {
         System.out.println("calllllll");
         // لیستی برای نگهداری پیش‌بینی‌ها
         List<CashPrediction> predictions = new ArrayList<>();
@@ -108,18 +110,18 @@ public class trainTestPlotKnnController {
         renderer.setSeriesPaint(1, Color.RED);
         plot.setRenderer(renderer);
 
-        // تبدیل نمودار به تصویر Base64
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        // تبدیل نمودار به تصویر و ارسال آن به‌صورت باینری
         BufferedImage chartImage = chart.createBufferedImage(800, 600);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(chartImage, "png", byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
-        String base64Image = Base64.encodeBase64String(imageBytes);
-        System.out.println("calllllll end");
-        // بازگشت داده‌ها و نمودار به صورت Base64
-        System.out.println(base64Image);
-        return new PredictionAndPlotResponse(new ArrayList<>(), base64Image);
-    }
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+
+        System.out.println("calllllll end");
+        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+    }
 
     @GetMapping("hi")
     public String sayhi() {
