@@ -1,5 +1,6 @@
 package org.knn.src.controller;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -37,8 +39,7 @@ public class trainTestPlotKnnController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/predictions")
-    public ResponseEntity<byte[]> getPredictions() throws Exception {
-        System.out.println("calllllll");
+    public PredictionAndPlotResponse getPredictions() throws Exception {
         // لیستی برای نگهداری پیش‌بینی‌ها
         List<CashPrediction> predictions = new ArrayList<>();
         DefaultCategoryDataset datasetForGraph = new DefaultCategoryDataset();
@@ -110,17 +111,66 @@ public class trainTestPlotKnnController {
         renderer.setSeriesPaint(1, Color.RED);
         plot.setRenderer(renderer);
 
-        // تبدیل نمودار به تصویر و ارسال آن به‌صورت باینری
-        BufferedImage chartImage = chart.createBufferedImage(800, 600);
+        // تبدیل نمودار به تصویر Base64
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        BufferedImage chartImage = chart.createBufferedImage(800, 600);
         ImageIO.write(chartImage, "png", byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
+        String base64Image = Base64.encodeBase64String(imageBytes);
+
+        // بازگشت داده‌ها و نمودار به صورت Base64
+        return new PredictionAndPlotResponse(predictions, base64Image);
+    }
+
+
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/predictions/chart")
+    public ResponseEntity<StreamingResponseBody> getPredictionsChart() throws Exception {
+        System.out.println("Generating chart...");
+
+        DefaultCategoryDataset datasetForGraph = new DefaultCategoryDataset();
+
+        // Assuming predictions are fetched in a similar manner
+        List<CashPrediction> predictions = new ArrayList<>();
+        for (int i = 0; i < predictions.size(); i++) {
+            CashPrediction prediction = predictions.get(i);
+            datasetForGraph.addValue(prediction.getActualCash(), "Actual Cash", "Instance " + (i + 1));
+            datasetForGraph.addValue(prediction.getPredictedCash(), "Predicted Cash", "Instance " + (i + 1));
+        }
+
+        // Create chart
+        JFreeChart chart = ChartFactory.createLineChart(
+                "Actual vs Predicted Cash",
+                "Instance",
+                "Cash",
+                datasetForGraph,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setOutlineVisible(false);
+        LineAndShapeRenderer renderer = new LineAndShapeRenderer();
+        renderer.setSeriesPaint(0, Color.BLUE);
+        renderer.setSeriesPaint(1, Color.RED);
+        plot.setRenderer(renderer);
+
+        // Prepare StreamingResponseBody to stream the image
+        StreamingResponseBody stream = outputStream -> {
+            BufferedImage chartImage = chart.createBufferedImage(800, 600);
+            ImageIO.write(chartImage, "png", outputStream);
+            outputStream.flush();
+        };
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_PNG);
+        headers.set(HttpHeaders.TRANSFER_ENCODING, "chunked");  // Explicitly setting chunked transfer encoding
 
-        System.out.println("calllllll end");
-        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        System.out.println("Streaming chart...");
+        return new ResponseEntity<>(stream, headers, HttpStatus.OK);
     }
 
     @GetMapping("hi")
