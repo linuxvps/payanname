@@ -36,6 +36,7 @@ public class trainTestPlotKnnController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/predictions")
     public PredictionAndPlotResponse getPredictions() throws Exception {
+        System.out.println("calllllll");
         // لیستی برای نگهداری پیش‌بینی‌ها
         List<CashPrediction> predictions = new ArrayList<>();
         DefaultCategoryDataset datasetForGraph = new DefaultCategoryDataset();
@@ -113,7 +114,7 @@ public class trainTestPlotKnnController {
         ImageIO.write(chartImage, "png", byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
         String base64Image = Base64.encodeBase64String(imageBytes);
-
+        System.out.println("calllllll end");
         // بازگشت داده‌ها و نمودار به صورت Base64
         return new PredictionAndPlotResponse(predictions, base64Image);
     }
