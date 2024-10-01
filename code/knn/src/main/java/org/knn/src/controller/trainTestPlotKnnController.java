@@ -118,8 +118,15 @@ public class trainTestPlotKnnController {
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
         String base64Image = Base64.encodeBase64String(imageBytes);
 
+        List<String> chunks = new ArrayList<>();
+        int length = base64Image.length();
+        for (int i = 0; i < length; i += 1000) {
+            chunks.add(base64Image.substring(i, Math.min(length, i + 1000)));
+        }
+
+
         // بازگشت داده‌ها و نمودار به صورت Base64
-        return new PredictionAndPlotResponse(predictions, base64Image);
+        return new PredictionAndPlotResponse(predictions, chunks);
     }
 
 
