@@ -119,7 +119,7 @@ public class trainTestPlotKnnController {
         String base64Image = Base64.encodeBase64String(imageBytes);
 
         // بازگشت داده‌ها و نمودار به صورت Base64
-        return new PredictionAndPlotResponse(predictions, null);
+        return new PredictionAndPlotResponse(predictions, base64Image);
     }
 
 
