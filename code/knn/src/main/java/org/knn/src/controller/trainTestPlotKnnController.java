@@ -116,6 +116,7 @@ public class trainTestPlotKnnController {
 
         // بازگشت داده‌ها و نمودار به صورت Base64
         // return new PredictionAndPlotResponse(predictions, base64Image);
+        predictions.forEach(System.out::println);
         return ResponseEntity.status(HttpStatus.OK).body(predictions);
     }
 
