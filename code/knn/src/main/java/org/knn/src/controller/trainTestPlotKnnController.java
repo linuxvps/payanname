@@ -2,10 +2,7 @@ package org.knn.src.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -24,8 +21,8 @@ import java.util.List;
 public class trainTestPlotKnnController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @GetMapping("/predictions")
-        public ResponseEntity<List<CashPrediction>> getPredictions() throws Exception {
+    @GetMapping("/predictions/{k}")
+        public ResponseEntity<List<CashPrediction>> getPredictions(@PathVariable int k) throws Exception {
 
         List<CashPrediction> predictions = new ArrayList<>();
         // تعریف ویژگی‌ها
@@ -60,7 +57,7 @@ public class trainTestPlotKnnController {
         Instances trainSet = Filter.useFilter(dataset, removePercentage);
 
         IBk knn = new IBk();
-        knn.setKNN(3);
+        knn.setKNN(k);
         knn.buildClassifier(trainSet);
 
         for (int i = 0; i < testSet.numInstances(); i++) {
