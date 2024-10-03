@@ -36,7 +36,7 @@ public class trainTestPlotKnnController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/predictions")
-    public ResponseEntity<String> getPredictions(@RequestBody int numInstances) throws Exception {
+        public ResponseEntity<List<CashPrediction>> getPredictions(@RequestBody int numInstances) throws Exception {
         // لیستی برای نگهداری پیش‌بینی‌ها
         List<CashPrediction> predictions = new ArrayList<>();
         DefaultCategoryDataset datasetForGraph = new DefaultCategoryDataset();
@@ -116,7 +116,7 @@ public class trainTestPlotKnnController {
 
         // بازگشت داده‌ها و نمودار به صورت Base64
         // return new PredictionAndPlotResponse(predictions, base64Image);
-        return ResponseEntity.ok(base64Image);
+        return ResponseEntity.status(HttpStatus.OK).body(predictions);
     }
 
 
