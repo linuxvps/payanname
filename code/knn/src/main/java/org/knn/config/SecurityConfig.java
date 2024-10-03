@@ -1,3 +1,4 @@
+/*
 package org.knn.config;
 
 import org.springframework.context.annotation.Bean;
@@ -16,4 +17,4 @@ public class SecurityConfig {
         return http.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable).build();
     }
-}
+}*/
