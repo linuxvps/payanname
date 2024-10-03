@@ -1,5 +1,6 @@
 package org.knn.src.controller;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
@@ -10,10 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;
@@ -30,7 +28,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Base64; // از این کلاس برای کدگذاری Base64 استفاده کنید
 
 @RestController
 @RequestMapping("/api")
@@ -38,8 +35,8 @@ import java.util.Base64; // از این کلاس برای کدگذاری Base64 
 public class trainTestPlotKnnController {
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @GetMapping("/predictions")
-    public StreamingResponseBody  getPredictions() throws Exception {
+    @PostMapping("/predictions")
+    public ResponseEntity<String> getPredictions(@RequestBody int numInstances) throws Exception {
         // لیستی برای نگهداری پیش‌بینی‌ها
         List<CashPrediction> predictions = new ArrayList<>();
         DefaultCategoryDataset datasetForGraph = new DefaultCategoryDataset();
@@ -54,7 +51,6 @@ public class trainTestPlotKnnController {
         Instances dataset = new Instances("ATM_Data", attributes, 0);
         dataset.setClassIndex(3);
 
-        int numInstances = 100;
         for (int i = 0; i < numInstances; i++) {
             double[] atm = new double[4];
             atm[0] = 35.68 + Math.random() * 0.02;
@@ -112,44 +108,15 @@ public class trainTestPlotKnnController {
         plot.setRenderer(renderer);
 
         // تبدیل نمودار به تصویر Base64
-        // ایجاد نمودار به عنوان تصویر
-        BufferedImage chartImage = chart.createBufferedImage(800, 600);
-
-        // استفاده از ByteArrayOutputStream برای نوشتن تصویر
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        BufferedImage chartImage = chart.createBufferedImage(800, 600);
         ImageIO.write(chartImage, "png", byteArrayOutputStream);
         byte[] imageBytes = byteArrayOutputStream.toByteArray();
+        String base64Image = Base64.encodeBase64String(imageBytes);
 
-        // محاسبه اندازه بلوک برای ارسال به صورت تدریجی
-        int blockSize = 1024; // اندازه بلوک (به بایت)
-        int totalBlocks = (int) Math.ceil((double) imageBytes.length / blockSize);
-
-        // Return StreamingResponseBody
-        return outputStream -> {
-            for (int i = 0; i < totalBlocks; i++) {
-                // محاسبه شروع و پایان بلوک
-                int start = i * blockSize;
-                int end = Math.min(start + blockSize, imageBytes.length);
-
-                // کپی بلوک به آرایه بایت جدید
-                byte[] chunk = new byte[end - start];
-                System.arraycopy(imageBytes, start, chunk, 0, chunk.length);
-
-                // تبدیل بلوک به Base64
-                String base64Chunk = Base64.getEncoder().encodeToString(chunk);
-
-                // نوشتن داده‌ها به خروجی
-                outputStream.write(base64Chunk.getBytes());
-                outputStream.flush();
-
-                // تأخیر برای شبیه‌سازی جریان‌سازی (اختیاری)
-                try {
-                    Thread.sleep(100); // 100 میلی‌ثانیه
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        };
+        // بازگشت داده‌ها و نمودار به صورت Base64
+        // return new PredictionAndPlotResponse(predictions, base64Image);
+        return ResponseEntity.ok(base64Image);
     }
 
 
