@@ -43,17 +43,17 @@ public class ExcelToDatabaseService {
             terminal.setRowUpdSeq(getLongCellValue(row.getCell(10)));
             terminal.setInsertSysdate(new Date());
             terminal.setUpdateSysdate(new Date());
-            terminal.setUpdateUser(getCellValue(row.getCell(11)));
-            terminal.setInsertUser(getCellValue(row.getCell(12)));
-            terminal.setBatchId(getLongCellValue(row.getCell(13)));
-            terminal.setIpAddress(getCellValue(row.getCell(14)));
-            terminal.setMasterKey(getCellValue(row.getCell(15)));
-            terminal.setPersianTitle(getCellValue(row.getCell(16)));
-            terminal.setEnglishTitle(getCellValue(row.getCell(17)));
-            terminal.setTerminalGroupId(getLongCellValue(row.getCell(18)));
-            terminal.setTraceId(getLongCellValue(row.getCell(19)));
-            terminal.setLatitude(getDoubleCellValue(row.getCell(20)));
-            terminal.setLongitude(getDoubleCellValue(row.getCell(21)));
+            terminal.setUpdateUser(getCellValue(row.getCell(13)));
+            terminal.setInsertUser(getCellValue(row.getCell(14)));
+            terminal.setBatchId(getLongCellValue(row.getCell(16)));
+            terminal.setIpAddress(getCellValue(row.getCell(17)));
+            terminal.setMasterKey(getCellValue(row.getCell(18)));
+            terminal.setPersianTitle(getCellValue(row.getCell(19)));
+            terminal.setEnglishTitle(getCellValue(row.getCell(20)));
+            terminal.setTerminalGroupId(getLongCellValue(row.getCell(22)));
+            terminal.setTraceId(getLongCellValue(row.getCell(23)));
+            terminal.setLatitude(getDoubleCellValue(row.getCell(24)));
+            terminal.setLongitude(getDoubleCellValue(row.getCell(25)));
 
             terminalRepository.save(terminal);
         }
