@@ -1,4 +1,4 @@
-FROM eclipse-temurin:22-jdk-alpine
+        FROM eclipse-temurin:22-jdk-alpine
 
 RUN apk add --no-cache bash procps curl tar openssh-client
 

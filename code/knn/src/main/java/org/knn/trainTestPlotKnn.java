@@ -1,4 +1,4 @@
-package org.knn.src;
+package org.knn;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -19,7 +19,7 @@ import weka.filters.unsupervised.instance.RemovePercentage;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class trianTestPlotKnn {
+public class trainTestPlotKnn {
     public static void main(String[] args) throws Exception {
         // تعریف ویژگی‌ها (Attributes)
         ArrayList<Attribute> attributes = new ArrayList<>();

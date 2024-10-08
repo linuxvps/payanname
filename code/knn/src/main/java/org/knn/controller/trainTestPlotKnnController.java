@@ -1,4 +1,4 @@
-package org.knn.src.controller;
+package org.knn.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +27,10 @@ public class trainTestPlotKnnController {
         List<CashPrediction> predictions = new ArrayList<>();
         // تعریف ویژگی‌ها
         ArrayList<Attribute> attributes = new ArrayList<>();
-        attributes.add(new Attribute("Location_Lat"));
-        attributes.add(new Attribute("Location_Long"));
-        attributes.add(new Attribute("Daily_Transactions"));
-        attributes.add(new Attribute("Current_Cash"));
+        attributes.add(new Attribute("Atm_ID"));        
+        attributes.add(new Attribute("Transaction_Amount"));
+        attributes.add(new Attribute("Transaction_Time"));
+        attributes.add(new Attribute("Atm_Balaance"));
 
         Instances dataset = new Instances("ATM_Data", attributes, 0);
         dataset.setClassIndex(3);

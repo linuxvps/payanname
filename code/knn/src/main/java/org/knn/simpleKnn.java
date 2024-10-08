@@ -1,4 +1,4 @@
-package org.knn.src;
+package org.knn;
 
 import weka.classifiers.lazy.IBk;
 import weka.core.Attribute;

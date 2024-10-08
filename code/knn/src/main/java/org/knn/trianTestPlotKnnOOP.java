@@ -1,4 +1,4 @@
-package org.knn.src;
+package org.knn;
 
 import java.awt.Color;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.knn.src.controller;
+package org.knn.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

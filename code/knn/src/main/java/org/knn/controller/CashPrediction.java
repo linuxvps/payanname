@@ -1,8 +1,7 @@
-package org.knn.src.controller;
+package org.knn.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
