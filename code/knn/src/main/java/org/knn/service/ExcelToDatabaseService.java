@@ -10,12 +10,17 @@ import org.springframework.stereotype.Service;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ExcelToDatabaseService {
 
     @Autowired
     private TerminalRepository terminalRepository;
+
+    public List<Terminal> showTerminal(){
+        return terminalRepository.findAll();
+    }
 
     public void readExcelAndInsertData(String excelFilePath) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(excelFilePath);

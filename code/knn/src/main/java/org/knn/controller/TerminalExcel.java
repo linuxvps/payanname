@@ -1,11 +1,13 @@
 package org.knn.controller;
 
+import org.knn.entity.Terminal;
 import org.knn.service.ExcelToDatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class TerminalExcel {
@@ -21,4 +23,11 @@ public class TerminalExcel {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/show")
+    public List<Terminal> showTerminal() {
+        List<Terminal> terminals = excelToDatabaseService.showTerminal();
+        return terminals;
+    }
+
 }
