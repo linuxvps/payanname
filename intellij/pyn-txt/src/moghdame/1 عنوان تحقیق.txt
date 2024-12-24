@@ -1,5 +1,0 @@
-1- عنوان به زبان فارسی:
-تخصیص بهینه منابع مالی و بهینه‌سازی پول‌گذاری خودپردازها با استفاده از الگوریتم نزدیک‌ترین همسایگی
-Optimal Allocation of Financial Resources and Cash Replenishment Optimization for ATMs Using the K-Nearest Neighbor Algorithm
-
-
